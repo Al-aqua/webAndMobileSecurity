@@ -2,7 +2,7 @@
 
 Authentication and authorization are the cornerstones of secure web and mobile applications. This chapter focuses on implementing these concepts securely using Pure PHP and Laravel frameworks.
 
-______________________________________________________________________
+---
 
 ## **3.1 Understanding Authentication vs. Authorization**
 
@@ -14,11 +14,23 @@ Example:
 - A user logging into a system is authentication.
 - Granting that user access to admin features is authorization.
 
-______________________________________________________________________
+---
 
 ## **3.2 Pure PHP Implementation**
 
-### **3.2.1 Building Secure Login and Registration Systems**
+### **3.2.1 Database Setup: Create a users table to store user data securely.**
+
+```sql
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(20) DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### **3.2.2 Building Secure Login and Registration Systems**
 
 - **User Registration:**
   - Collect user details (e.g., email, username, password).
@@ -26,9 +38,36 @@ ______________________________________________________________________
 
 ```php
 <?php
-$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-// Store $hashedPassword in the database
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = htmlspecialchars($_POST['username']);
+    $password = $_POST['password'];
+
+    $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+
+    $conn = new mysqli("localhost", "root", "", "php_auth");
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    $stmt = $conn->prepare("INSERT INTO users (username, password_hash) VALUES (?, ?)");
+    $stmt->bind_param("ss", $username, $passwordHash);
+
+    if ($stmt->execute()) {
+        echo "Registration successful.";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
+    $conn->close();
+}
 ?>
+
+<form method="POST">
+    Username: <input type="text" name="username" required><br>
+    Password: <input type="password" name="password" required><br>
+    <button type="submit">Register</button>
+</form>
 ```
 
 - **User Login:**
@@ -36,49 +75,111 @@ $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
 ```php
 <?php
-if (password_verify($inputPassword, $storedHashedPassword)) {
-    echo "Login successful!";
-} else {
-    echo "Invalid credentials!";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = htmlspecialchars($_POST['username']);
+    $password = $_POST['password'];
+
+    $conn = new mysqli("localhost", "root", "", "php_auth");
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    $stmt = $conn->prepare("SELECT password_hash FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->bind_result($passwordHash);
+
+    if ($stmt->fetch() && password_verify($password, $passwordHash)) {
+        session_start();
+        $_SESSION['username'] = $username;
+        echo "Login successful.";
+    } else {
+        echo "Invalid credentials.";
+    }
+
+    $stmt->close();
+    $conn->close();
 }
 ?>
+
+<form method="POST">
+    Username: <input type="text" name="username" required><br>
+    Password: <input type="password" name="password" required><br>
+    <button type="submit">Login</button>
+</form>
 ```
 
-### **3.2.2 Implementing Role-Based Access Control (RBAC)**
+### **3.2.3 Assignments**
 
-1. Assign roles to users (e.g., Admin, Editor, Viewer).
-1. Store user roles in the database.
-1. Restrict access based on roles.
+1. **Implementing Role-Based Access Control (RBAC)**
 
-```php
-<?php
-if ($userRole === 'Admin') {
-    echo "Welcome, Admin!";
-} else {
-    echo "Access denied!";
-}
-?>
+   1. Assign roles to users (e.g., Admin, Editor, Viewer).
+   1. Store user roles in the database.
+   1. Restrict access based on roles.
+
+Explain the steps you took to implement RBAC in your application.
+
 ```
 
-### **3.2.3 Protecting Sessions and Mitigating Session Hijacking**
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+```
+
+2. **Protecting Sessions and Mitigating Session Hijacking**
 
 - **Best Practices:**
+
   - Use `session_start()` securely with `session_regenerate_id()`.
   - Set session cookies with the `HttpOnly` and `Secure` flags.
 
-```php
-<?php
-session_start();
-session_regenerate_id(true);
-$_SESSION['user'] = $username;
-?>
-```
-
 - **Prevent Session Fixation:**
+
   - Regenerate session IDs after login.
   - Set strict session timeout policies.
 
-______________________________________________________________________
+Explain the steps you took to implement session protection in your application.
+
+```
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
+```
+
+---
 
 ## **3.3 Laravel Implementation**
 
@@ -162,21 +263,4 @@ php artisan migrate
 1. Validate all input using `FormRequest`.
 1. Secure sensitive configuration using environment variables.
 
-______________________________________________________________________
-
-## **3.4 Hands-On Activities**
-
-1. **Build a Simple Authentication System in Pure PHP:**
-
-   - Create a secure login and registration form.
-   - Protect sessions and implement RBAC.
-
-1. **Implement Laravel Authentication:**
-
-   - Scaffold authentication and customize login workflows.
-   - Add role-based access control.
-
-1. **Secure an API with Laravel Sanctum:**
-
-   - Build a token-based API.
-   - Protect endpoints with middleware.
+---
