@@ -1,8 +1,8 @@
-# **3. Authentication and Authorization**
+# 3. Authentication and Authorization
 
 Authentication and authorization are the cornerstones of secure web and mobile applications. This chapter focuses on implementing these concepts securely using Pure PHP and Laravel frameworks.
 
----
+______________________________________________________________________
 
 ## **3.1 Understanding Authentication vs. Authorization**
 
@@ -14,7 +14,7 @@ Example:
 - A user logging into a system is authentication.
 - Granting that user access to admin features is authorization.
 
----
+______________________________________________________________________
 
 ## **3.2 Pure PHP Implementation**
 
@@ -179,7 +179,7 @@ Explain the steps you took to implement session protection in your application.
 --------------------------------------------------------------------
 ```
 
----
+______________________________________________________________________
 
 ## **3.3 Laravel Implementation**
 
@@ -263,4 +263,4 @@ php artisan migrate
 1. Validate all input using `FormRequest`.
 1. Secure sensitive configuration using environment variables.
 
----
+______________________________________________________________________

@@ -1,4 +1,4 @@
-# **1. Introduction to Web and Mobile Security**
+# 1. Introduction to Web and Mobile Security
 
 ## **1.1 Overview of Web and Mobile Security**
 

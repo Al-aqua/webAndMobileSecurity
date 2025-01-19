@@ -1,4 +1,4 @@
-# **2. Web Browser Developer Tools**
+# 2. Web Browser Developer Tools
 
 ## **2.1 Overview of Web Browser Developer Tools**
 
