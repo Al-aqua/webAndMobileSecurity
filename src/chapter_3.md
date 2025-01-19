@@ -183,7 +183,49 @@ Explain the steps you took to implement session protection in your application.
 
 ## **3.3 Laravel Implementation**
 
-### **3.3.1 Laravel Authentication Basics**
+### **3.3.1 Createing a Laravel project**
+
+> [!NOTE]
+> You need to have PHP installed on your system to run Laravel.
+
+1. Start by installing Composer.
+
+- linux
+
+```bash
+curl -sS https://getcomposer.org/installer | php
+```
+
+- Windows
+
+```powershell
+# Run as administrator...
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://php.new/install/windows/8.4'))
+```
+
+2. Install Laravel installer via Composer.
+
+```bash
+composer global require laravel/installer
+```
+
+3. Create a new Laravel project.
+
+```bash
+laravel new auth_example
+```
+
+4. Once the application has been created, you can start Laravel's local development server, queue worker, and Vite development server using the dev Composer script:
+
+```bash
+cd auth_example
+npm install && npm run build
+composer run dev
+```
+
+4.
+
+### **3.3.2 Laravel Authentication Basics**
 
 - Use Laravel’s built-in `auth` scaffolding for rapid implementation.
 
@@ -191,7 +233,7 @@ Explain the steps you took to implement session protection in your application.
 php artisan make:auth
 ```
 
-### **3.3.2 Customizing Authentication Workflows**
+### **3.3.3 Customizing Authentication Workflows**
 
 - Modify login and registration controllers to add custom logic (e.g., multi-factor authentication).
 
@@ -207,7 +249,7 @@ public function login(Request $request) {
 }
 ```
 
-### **3.3.3 Implementing Authorization Policies and Gates**
+### **3.3.4 Implementing Authorization Policies and Gates**
 
 - **Policies:** Define access rules for models.
 
@@ -231,7 +273,7 @@ Gate::define('edit-post', function (User $user, Post $post) {
 });
 ```
 
-### **3.3.4 Securing APIs with Passport or Sanctum**
+### **3.3.5 Securing APIs with Passport or Sanctum**
 
 - **Laravel Passport:** Suitable for full OAuth2 authentication.
 
@@ -256,7 +298,7 @@ php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
 php artisan migrate
 ```
 
-### **3.3.5 Best Practices in Laravel Security**
+### **3.3.6 Best Practices in Laravel Security**
 
 1. Use `bcrypt` for password hashing (default in Laravel).
 1. Enable CSRF protection for forms.
